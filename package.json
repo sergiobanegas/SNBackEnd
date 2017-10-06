@@ -1,0 +1,25 @@
+{
+  "name": "node-back",
+  "version": "1.0.0",
+  "description": "First project using Express.js",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sergio Banegas Cortijo",
+  "license": "ISC",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/sergiobanegas/SNBackend.git"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.1",
+    "jwt-simple": "^0.5.1",
+    "method-override": "^2.3.10",
+    "moment": "^2.18.1",
+    "mongoose": "^4.12.0"
+  }
+}
