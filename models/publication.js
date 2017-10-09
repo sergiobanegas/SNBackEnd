@@ -19,6 +19,8 @@ var publicationSchema = new Schema({
   image: {
     type: String
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Publication', publicationSchema);

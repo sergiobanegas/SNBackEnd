@@ -3,7 +3,8 @@ var router = express.Router();
 var PublicationCtrl = require('../controllers/publication');
 
 router.route('/')
-  .get(PublicationCtrl.findAll);
+  .get(PublicationCtrl.findAll)
+  .post(PublicationCtrl.add);
 
 router.route('/:id')
   .get(PublicationCtrl.findById)

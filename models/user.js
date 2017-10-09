@@ -16,6 +16,8 @@ var userSchema = new Schema({
   password: {
     type: String
   }
+}, {
+  timestamps: true
 });
 
 userSchema.pre('save', function(next) {
