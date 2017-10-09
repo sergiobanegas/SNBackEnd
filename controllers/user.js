@@ -5,7 +5,7 @@ var User = mongoose.model('User');
 exports.findAll = function(req, res) {
   User.find(function(err, users) {
     if (err) res.send(500, err.message);
-    console.log('GET /users')
+    console.log('GET /users');
     res.status(200).jsonp(users);
   });
 };

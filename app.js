@@ -3,7 +3,6 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var cors = require('cors');
 var methodOverride = require("method-override");
-var middleware = require('./middleware');
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -12,17 +11,17 @@ app.use(bodyParser.urlencoded({
 app.use(methodOverride());
 app.use(cors());
 app.set('port', 3000);
-require('./models/user')(app, mongoose);
+
+require('./models/user');
+require('./models/publication');
 
 var authRoutes = require("./routes/auth");
-var userRoutes = require("./routes/user");
-var router = express.Router();
-router.use(middleware.ensureAuthenticated);
-router.use('/users', userRoutes);
+var router = require("./router");
+
 app.use("/auth", authRoutes);
 app.use("/api", router);
 
-mongoose.connect('mongodb://localhost/users', (err, res) => {
+mongoose.connect('mongodb://localhost/social-network', (err, res) => {
   if (err) throw err;
   console.log('Connected to Database');
   app.listen(app.get('port'), () => {
