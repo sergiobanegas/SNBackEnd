@@ -15,7 +15,8 @@ var userSchema = new Schema({
   },
   password: {
     type: String
-  }
+  },
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User'}]
 }, {
   timestamps: true
 });
