@@ -17,6 +17,9 @@ app.set('port', 3000);
 
 require('./app/models/user');
 require('./app/models/post');
+require('./app/models/comments/post_comment');
+require('./app/models/comments/post_comment_reply');
+require('./app/models/comments/post_comment_reply_reply');
 
 var authRoutes = require("./app/routes/auth");
 var router = require("./app/router");
@@ -28,6 +31,6 @@ mongoose.connect(config.DB, (err, res) => {
   if (err) throw err;
   console.log('Connected to Database');
   app.listen(app.get('port'), () => {
-    console.log("Node server running on http://localhost:"+app.get('port'));
+    console.log(`Node server running on http://localhost:${app.get('port')}`);
   });
 });

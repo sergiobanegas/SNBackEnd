@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
+var PostComment = mongoose.model('PostComment');
+
 var HTTPResponseError = require('./wrappers/errors/HTTPResponseError.js');
 var HTTP400ResponseError = require('./wrappers/errors/HTTP400ResponseError.js');
 
@@ -12,10 +14,10 @@ exports.findAll = function(req, res) {
 exports.findById = function(req, res) {
   Post.findById(req.params.id, (err, post) => {
     if (!post) {
-        return res.status(404).send(new HTTPResponseError(`The post with the id ${req.params.id} doesn't exists`, 400));
+      return res.status(404).send(new HTTPResponseError(`The post with the id ${req.params.id} doesn't exists`, 400));
     }
     return err ? res.send(new HTTPResponseError(err.message, 500)) : res.status(200).jsonp(post);
-  });
+  }).populate("author", "-password -__v").populate("likes").populate("comments");
 };
 
 exports.add = function(req, res) {
@@ -76,6 +78,33 @@ exports.like = function(req, res) {
     post.likes.indexOf(req.user.id) === -1 ? post.likes.push(req.user.id) : post.likes.pull(req.user.id);
     post.save(error => {
       return error ? res.status(500).send(new HTTPResponseError(error.message, 500)) : res.status(200);
+    });
+  });
+};
+
+exports.addComment = function(req, res) {
+  Post.findById(req.params.id, (err, post) => {
+    if (err) return res.send(new HTTPResponseError(err.message, 500));
+    if (!post) {
+      return res.status(404).send(new HTTPResponseError("The post doesn't exists", 404));
+    }
+    if (!req.body.content) {
+      return res.status(400).send(new HTTP400ResponseError());
+    }
+    var comment = new PostComment({
+      author: req.user.id,
+      content: req.body.content,
+      post: req.params.id
+    });
+    comment.save(error => {
+      if (error) {
+        return res.status(500).send(new HTTPResponseError(err.message, 500));
+      }
+      console.log(comment);
+      post.comments.push(comment);
+      post.save(error => {
+        return error ? res.status(500).send(new HTTPResponseError(error.message, 500)) : res.status(200);
+      });
     });
   });
 };

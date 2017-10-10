@@ -19,6 +19,7 @@ var postSchema = new Schema({
   image: {
     type: String
   },
+  comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'PostComment'}],
   likes: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 }, {
   timestamps: true
