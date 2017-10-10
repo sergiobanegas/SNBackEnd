@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var Publication = mongoose.model('Publication');
 var HTTPResponseError = require('./wrappers/errors/HTTPResponseError.js');
-
-//TODO añadir restricciones de parámetros
+var HTTP400ResponseError = require('./wrappers/errors/HTTP400ResponseError.js');
 
 exports.findAll = function(req, res) {
   Publication.find((err, publications) => {
@@ -12,13 +11,16 @@ exports.findAll = function(req, res) {
 
 exports.findById = function(req, res) {
   Publication.findById(req.params.id, (err, publication) => {
+    if (!publication) {
+        return res.status(404).send(new HTTPResponseError(`The publication with the id ${req.params.id} doesn't exists`, 400));
+    }
     return err ? res.send(new HTTPResponseError(err.message, 500)) : res.status(200).jsonp(publication);
   });
 };
 
 exports.add = function(req, res) {
   if (!req.body.title || !req.body.content || !req.body.privacity) {
-    return res.status(400).send(new HTTPResponseError("Bad request: invalid data", 400));
+    return res.status(400).send(new HTTP400ResponseError());
   }
   var publication = new Publication({
     title: req.body.title,
@@ -33,6 +35,9 @@ exports.add = function(req, res) {
 };
 
 exports.update = function(req, res) {
+  if (!req.body.title || !req.body.content || !req.body.privacity) {
+    return res.status(400).send(new HTTP400ResponseError());
+  }
   Publication.findById(req.params.id, (err, publication) => {
     if (err) return res.send(new HTTPResponseError(err.message, 500));
     if (!publication) {
@@ -49,9 +54,9 @@ exports.update = function(req, res) {
 
 exports.delete = function(req, res) {
   Publication.findById(req.params.id, (err, publication) => {
-    if (err) return res.status(500).send(err.message);
+    if (err) return res.status(500).send(new HTTPResponseError(err.message, 500));
     if (req.user.isAdmin || req.user.id !== publication.author) {
-      return res.status(404).send(new HTTPResponseError("You don't have authorization to remove the post", 500));
+      return res.status(401).send(new HTTPResponseError("You don't have authorization to remove the post", 401));
     }
     if (!publication) {
       return res.status(404).send(new HTTPResponseError("The publication doesn't exists", 404));

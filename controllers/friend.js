@@ -9,6 +9,9 @@ exports.findUserFriends = function(req, res) {
 };
 
 exports.addFriend = function(req, res) {
+  if (!req.body.user_id) {
+    return res.status(400).send(new HTTP400ResponseError());
+  }
   User.findById(req.user.id, (err, user) => {
     if (err) return res.send(500, new HTTPResponseError(err.message, 500));
     if (req.user.id === req.body.user_id) {
@@ -25,6 +28,9 @@ exports.addFriend = function(req, res) {
 };
 
 exports.deleteFriend = function(req, res) {
+  if (!req.body.user_id) {
+    return res.status(400).send(new HTTP400ResponseError());
+  }
   User.findById(req.user.id, (err, user) => {
     if (user.friends.indexOf(req.body.user_id) === -1) {
       return res.status(404).send(new HTTPResponseError(`You don't have the user with the id '${req.body.user_id}' as a friend`, 404));
