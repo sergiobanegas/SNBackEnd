@@ -1,6 +1,6 @@
 var jwt = require('jsonwebtoken');
 var moment = require('moment');
-var config = require('./config');
+var config = require('../config');
 var HTTPResponseError = require('./controllers/wrappers/errors/HTTPResponseError.js');
 
 exports.ensureAuthenticated = function(req, res, next) {
