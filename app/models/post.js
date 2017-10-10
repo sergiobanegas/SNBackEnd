@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var publicationSchema = new Schema({
+var postSchema = new Schema({
   title: {
     type: String
   },
@@ -18,9 +18,10 @@ var publicationSchema = new Schema({
   },
   image: {
     type: String
-  }
+  },
+  likes: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 }, {
   timestamps: true
 });
 
-module.exports = mongoose.model('Publication', publicationSchema);
+module.exports = mongoose.model('Post', postSchema);

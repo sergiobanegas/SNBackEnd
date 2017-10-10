@@ -4,10 +4,10 @@ var router = express.Router();
 
 var authRoutes = require("./routes/auth");
 var userRoutes = require("./routes/users");
-var publicationRoutes = require("./routes/publications");
+var postRoutes = require("./routes/posts");
 
 router.use(middleware.ensureAuthenticated);
 router.use('/users', userRoutes);
-router.use('/publications', publicationRoutes);
+router.use('/posts', postRoutes);
 
 module.exports = router;

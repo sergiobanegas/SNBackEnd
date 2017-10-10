@@ -16,7 +16,7 @@ app.use(cors());
 app.set('port', 3000);
 
 require('./app/models/user');
-require('./app/models/publication');
+require('./app/models/post');
 
 var authRoutes = require("./app/routes/auth");
 var router = require("./app/router");
