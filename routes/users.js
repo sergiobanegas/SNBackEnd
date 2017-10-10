@@ -9,10 +9,14 @@ router.route('/')
 router.route('/:id')
   .get(UserCtrl.findById)
   .put(UserCtrl.update);
-  
+
 router.route('/friends')
   .get(FriendCtrl.findUserFriends)
-  .post(FriendCtrl.addFriend)
+  .post(FriendCtrl.acceptFriend)
   .delete(FriendCtrl.deleteFriend);
+
+router.route('/friends/request')
+  .post(FriendCtrl.requestFriend)
+  .delete(FriendCtrl.deleteFriendRequest);
 
 module.exports = router;
