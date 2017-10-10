@@ -7,7 +7,7 @@ var HTTPResponseError = require('./wrappers/errors/HTTPResponseError.js');
 //GET - Return all registers
 exports.findAll = function(req, res) {
   User.find((err, users) => {
-    return err ? res.status(500).send(new Error(err.message)) : res.status(200).jsonp(users);
+    return err ? res.status(500).send(new HTTPResponseError(err.message, 500)) : res.status(200).jsonp(users);
   }).populate("friends");
 };
 
