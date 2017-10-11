@@ -19,10 +19,22 @@ var postSchema = new Schema({
   image: {
     type: String
   },
-  comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
-  likes: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+  comments: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
+  }],
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, {
   timestamps: true
+});
+
+postSchema.pre('remove', function(next) {
+  this.model('Comment').remove({
+    post: this._id
+  }, next);
 });
 
 module.exports = mongoose.model('Post', postSchema);

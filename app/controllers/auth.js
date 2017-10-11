@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var HTTPResponseError = require('./wrappers/http/HTTPErrorResponse');
-var HTTP400ResponseError = require('./wrappers/http/HTTP400ErrorResponse');
+var HTTPErrorResponse = require('./wrappers/http/HTTPErrorResponse');
+var HTTP400ErrorResponse = require('./wrappers/http/HTTP400ErrorResponse');
 var TokenResponse = require('./wrappers/auth/TokenResponse');
 var authService = require('../services/auth');
 

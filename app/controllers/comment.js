@@ -15,59 +15,10 @@ exports.findById = function(req, res) {
 };
 
 exports.add = function(req, res) {
-  if (!req.body.post_id || !req.body.content) {
+  if (!req.body.content) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
-  if (req.body.parent) {
-    Comment.findById(req.body.parent, (err, postComment) => {
-      if (err) return res.send(new HTTPErrorResponse(err.message, 500));
-      if (!postComment) {
-        return res.status(404).send(new HTTPErrorResponse("The post comment doesn't exists", 404));
-      }
-      if (!req.body.content) {
-        return res.status(400).send(new HTTP400ResponseError());
-      }
-      var newComment = new Comment({
-        author: req.user.id,
-        content: req.body.content,
-        post: postComment.post,
-        parent: req.body.parent
-      });
-      newComment.save(error => {
-        if (error) {
-          return res.status(500).send(new HTTPErrorResponse(err.message, 500));
-        }
-        postComment.replies.push(newComment);
-        postComment.save(error => {
-          return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(newComment);
-        });
-      });
-    });
-  } else {
-    Post.findById(req.body.post_id, (err, post) => {
-      if (err) return res.send(new HTTPErrorResponse(err.message, 500));
-      if (!post) {
-        return res.status(404).send(new HTTPErrorResponse("The post doesn't exists", 404));
-      }
-      if (!req.body.content) {
-        return res.status(400).send(new HTTP400ErrorResponse());
-      }
-      var comment = new Comment({
-        author: req.user.id,
-        content: req.body.content,
-        post: req.body.post_id
-      });
-      comment.save(error => {
-        if (error) {
-          return res.status(500).send(new HTTPErrorResponse(err.message, 500));
-        }
-        post.comments.push(comment);
-        post.save(error => {
-          return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(comment);
-        });
-      });
-    });
-  }
+  return req.body.parent ? addCommentToComment(req, res) : addCommentToPost(req, res);
 };
 
 exports.delete = function(req, res) {
@@ -97,3 +48,53 @@ exports.like = function(req, res) {
     });
   });
 };
+
+addCommentToPost = function(req, res) {
+  if (!req.body.post_id) {
+    return res.status(400).send(new HTTP400ErrorResponse());
+  }
+  Post.findById(req.body.post_id, (err, post) => {
+    if (err) return res.send(new HTTPErrorResponse(err.message, 500));
+    if (!post) {
+      return res.status(404).send(new HTTPErrorResponse("The post doesn't exists", 404));
+    }
+    var comment = new Comment({
+      author: req.user.id,
+      content: req.body.content,
+      post: req.body.post_id
+    });
+    comment.save(error => {
+      if (error) {
+        return res.status(500).send(new HTTPErrorResponse(err.message, 500));
+      }
+      post.comments.push(comment);
+      post.save(error => {
+        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(comment);
+      });
+    });
+  });
+}
+
+addCommentToComment = function(req, res) {
+  Comment.findById(req.body.parent, (err, postComment) => {
+    if (err) return res.send(new HTTPErrorResponse(err.message, 500));
+    if (!postComment) {
+      return res.status(404).send(new HTTPErrorResponse("The post comment doesn't exists", 404));
+    }
+    var newComment = new Comment({
+      author: req.user.id,
+      content: req.body.content,
+      post: postComment.post,
+      parent: req.body.parent
+    });
+    newComment.save(error => {
+      if (error) {
+        return res.status(500).send(new HTTPErrorResponse(err.message, 500));
+      }
+      postComment.replies.push(newComment);
+      postComment.save(error => {
+        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(newComment);
+      });
+    });
+  });
+}

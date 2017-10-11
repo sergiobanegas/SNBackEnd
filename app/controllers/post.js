@@ -58,7 +58,7 @@ exports.update = function(req, res) {
 exports.delete = function(req, res) {
   Post.findById(req.params.id, (err, post) => {
     if (err) return res.status(500).send(new HTTPErrorResponse(err.message, 500));
-    if (req.user.isAdmin || req.user.id !== post.author) {
+    if (req.user.isAdmin || req.user.id != post.author) {
       return res.status(401).send(new HTTPErrorResponse("You don't have authorization to remove the post", 401));
     }
     if (!post) {

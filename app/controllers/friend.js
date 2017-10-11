@@ -1,11 +1,18 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var HTTPResponseError = require('./wrappers/http/HTTPErrorResponse');
+var HTTPErrorResponse = require('./wrappers/http/HTTPErrorResponse');
+var HTTPSuccessResponse = require('./wrappers/http/HTTPSuccessResponse');
 
 exports.findUserFriends = function(req, res) {
-  User.findById(req.user.id).select('friends').populate('friends', (err, friends) => {
-    return err ? res.send(500, new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(friends);
-  });
+  User.findById(req.user.id, (err, user) => {
+    return err ? res.send(500, new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(user.friends);
+  }).select('friends');
+};
+
+exports.findUserFriendRequests = function(req, res) {
+  User.findById(req.user.id, (err, user) => {
+    return err ? res.send(500, new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(user.friend_requests);
+  }).select('friend_requests');
 };
 
 exports.requestFriend = function(req, res) {
@@ -22,7 +29,7 @@ exports.requestFriend = function(req, res) {
     }
     user.friend_requests.push(req.user.id);
     user.save(err => {
-      return err ? res.send(500, new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(user);
+      return err ? res.send(500, new HTTPErrorResponse(err.message, 500)) : res.status(201).send(new HTTPSuccessResponse("Friend request created", 201));
     });
   });
 };
@@ -48,7 +55,7 @@ exports.acceptFriend = function(req, res) {
         }
         userRemittent.friends.push(req.user.id);
         userRemittent.save(errorSaving => {
-          return errorSaving ? res.send(500, new HTTPErrorResponse(errorSaving.message, 500)) : res.status(200).jsonp(user);
+          return errorSaving ? res.send(500, new HTTPErrorResponse(errorSaving.message, 500)) : res.status(201).send(new HTTPSuccessResponse("Friend added", 201));
         });
       });
     });
@@ -67,7 +74,7 @@ exports.deleteFriend = function(req, res) {
       _id: req.body.user_id
     });
     user.save(error => {
-      return error ? res.send(500, new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(user);
+      return error ? res.send(500, new HTTPErrorResponse(error.message, 500)) : res.status(200).send(new HTTPSuccessResponse("Friend deleted", 200));
     });
   });
 };
@@ -84,7 +91,7 @@ exports.deleteFriendRequest = function(req, res) {
       _id: req.user.id
     });
     user.save(error => {
-      return error ? res.send(500, new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(user);
+      return error ? res.send(500, new HTTPErrorResponse(error.message, 500)) : res.status(200).send(new HTTPSuccessResponse("Friend request deleted", 200));
     });
   });
 };
