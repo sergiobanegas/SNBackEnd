@@ -14,7 +14,4 @@ router.route('/:id')
 router.route('/:id/like')
   .post(PostCtrl.like);
 
-router.route('/:id/comments')
-  .post(PostCtrl.addComment);
-
 module.exports = router;

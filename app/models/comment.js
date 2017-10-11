@@ -1,21 +1,25 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var replySchema = new Schema({
+var commentSchema = new Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  post_comment_reply: {
+  post: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostComment'
+    ref: 'Post'
+  },
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
   },
   content: {
     type: String
   },
   replies: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PostComment'
+    ref: 'Comment'
   }],
   likes: [{
     type: mongoose.Schema.Types.ObjectId,
@@ -25,4 +29,4 @@ var replySchema = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('PostCommentReplyReply', replySchema);
+module.exports = mongoose.model('Comment', commentSchema);
