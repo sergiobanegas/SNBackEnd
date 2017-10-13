@@ -79,4 +79,33 @@ describe("/api/posts", function() {
       });
   });
 
+  it("should unlike a post correctly", function(done) {
+    server
+      .post(`/api/posts/${postId}/like`)
+      .set('Authorization', `JWT ${token}`)
+      .expect(200)
+      .end(function(err, res) {
+        res.status.should.equal(200);
+        server
+          .get(`/api/posts/${postId}`)
+          .set('Authorization', `JWT ${token}`)
+          .expect(200)
+          .end(function(err, res) {
+            res.body.likes.should.not.have.lengthOf(1);
+            done();
+          });
+      });
+  });
+
+  it("should remove a post correctly", function(done) {
+    server
+      .delete(`/api/posts/${postId}`)
+      .set('Authorization', `JWT ${token}`)
+      .expect(204)
+      .end(function(err, res) {
+        res.status.should.equal(204);
+        done();
+      });
+  });
+
 });

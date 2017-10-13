@@ -3,18 +3,22 @@ var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
   title: {
-    type: String
+    type: String,
+    required: true
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   content: {
-    type: String
+    type: String,
+    required: true
   },
   privacity: {
     type: Number,
-    enum: [0, 1, 2]
+    enum: [0, 1, 2],
+    required: true
   },
   image: {
     type: String

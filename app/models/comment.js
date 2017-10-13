@@ -4,18 +4,21 @@ var Schema = mongoose.Schema;
 var commentSchema = new Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   },
   post: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post'
+    ref: 'Post',
+    required: true
   },
   parent: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Comment'
   },
   content: {
-    type: String
+    type: String,
+    required: true
   },
   replies: [{
     type: mongoose.Schema.Types.ObjectId,

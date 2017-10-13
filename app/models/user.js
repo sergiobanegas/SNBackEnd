@@ -4,18 +4,26 @@ var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
   name: {
-    type: String
+    type: String,
+    required: true
   },
   email: {
     type: String,
-    unique : true
+    unique : true,
+    required: true
   },
   genre: {
     type: String,
-    enum: ['male', 'female']
+    enum: ['male', 'female'],
+    required: true
   },
   password: {
-    type: String
+    type: String,
+    required: true
+  },
+  avatar: {
+    type: String,
+    required: true
   },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User'}],
   friend_requests_sent: [{ type: Schema.Types.ObjectId, ref: 'User'}],

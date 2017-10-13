@@ -25,6 +25,8 @@ var router = require("./app/router");
 app.use("/auth", authRoutes);
 app.use("/api", router);
 
+app.use(express.static('public'));
+
 mongoose.connect(config.DB, (err, res) => {
   if (err) throw err;
   console.log('Connected to Database');

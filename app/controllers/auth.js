@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var config = require("../../config");
 var HTTPErrorResponse = require('./wrappers/http/HTTPErrorResponse');
 var HTTP400ErrorResponse = require('./wrappers/http/HTTP400ErrorResponse');
 var TokenResponse = require('./wrappers/auth/TokenResponse');
@@ -15,11 +16,16 @@ exports.emailSignup = function(req, res) {
     if (user) {
       return res.status(400).send(new HTTPErrorResponse("The email provided already exists", 400));
     }
+    var avatar = config.DEFAULT_AVATAR_IMAGE;
+    if (req.file) {
+      avatar = (req.file.path.replace(/\\/g,"/")).replace("public", "")
+    }
     var user = new User({
       name: req.body.name,
       email: req.body.email,
       genre: req.body.genre,
-      password: req.body.password
+      password: req.body.password,
+      avatar: avatar
     });
     user.save((err, user) => {
       return err ?
