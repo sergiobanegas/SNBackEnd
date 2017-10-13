@@ -7,9 +7,15 @@ router.route('/')
   .post(FriendCtrl.acceptFriend)
   .delete(FriendCtrl.deleteFriend);
 
-router.route('/requests')
-  .get(FriendCtrl.findUserFriendRequests)
-  .post(FriendCtrl.requestFriend)
-  .delete(FriendCtrl.deleteFriendRequest);
+router.route("/requests")
+  .post(FriendCtrl.requestFriend);
+
+router.route('/requests-sent')
+  .get(FriendCtrl.findUserFriendRequestsSent)
+  .delete(FriendCtrl.deleteFriendRequestSent);
+
+router.route('/requests-received')
+  .get(FriendCtrl.findUserFriendRequestsReceived)
+  .delete(FriendCtrl.deleteFriendRequestReceived);
 
 module.exports = router;

@@ -4,7 +4,8 @@
   "description": "First project using Express.js",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "find ./test -name 'test.js' | xargs mocha -R spec"
   },
   "author": "Sergio Banegas Cortijo",
   "license": "ISC",

@@ -9,16 +9,23 @@ exports.emailSignup = function(req, res) {
   if (!req.body.name || !req.body.email || !req.body.genre || !req.body.password) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
-  var user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    genre: req.body.genre,
-    password: req.body.password
-  });
-  user.save((err, user) => {
-    return err ?
-      res.send(500, err.message) :
-      res.status(200).send(new TokenResponse(authService.createToken(user)));
+  User.findOne({
+    email: req.body.email
+  }, (err, user) => {
+    if (user) {
+      return res.status(400).send(new HTTPErrorResponse("The email provided already exists", 400));
+    }
+    var user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      genre: req.body.genre,
+      password: req.body.password
+    });
+    user.save((err, user) => {
+      return err ?
+        res.send(500, err.message) :
+        res.status(200).send(new TokenResponse(authService.createToken(user)));
+    });
   });
 };
 

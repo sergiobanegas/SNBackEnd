@@ -1,18 +1,10 @@
-var config = require("../config");
+var config = require("../../config");
 var supertest = require("supertest");
 var should = require("should");
 
 var server = supertest.agent(`http://localhost:${config.PORT}`);
 
 describe("/auth", function() {
-
-  after(function(done) {
-    db.connection.db.dropDatabase(function() {
-      db.connection.close(function() {
-        done();
-      });
-    });
-  });
 
   it("should sign up correctly", function(done) {
     server

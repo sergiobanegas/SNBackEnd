@@ -7,7 +7,8 @@ var userSchema = new Schema({
     type: String
   },
   email: {
-    type: String
+    type: String,
+    unique : true
   },
   genre: {
     type: String,
@@ -17,7 +18,8 @@ var userSchema = new Schema({
     type: String
   },
   friends: [{ type: Schema.Types.ObjectId, ref: 'User'}],
-  friend_requests: [{ type: Schema.Types.ObjectId, ref: 'User'}]
+  friend_requests_sent: [{ type: Schema.Types.ObjectId, ref: 'User'}],
+  friend_requests_received: [{ type: Schema.Types.ObjectId, ref: 'User'}]
 }, {
   timestamps: true
 });
