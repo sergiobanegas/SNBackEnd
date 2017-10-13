@@ -4,7 +4,7 @@ var should = require("should");
 var jwt = require('jsonwebtoken');
 var server = supertest.agent(`http://localhost:${config.PORT}`);
 
-describe("/friends", function() {
+describe("/api/friends", function() {
 
   var token1;
   var token2;

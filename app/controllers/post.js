@@ -18,7 +18,7 @@ exports.findById = function(req, res) {
       return res.status(404).send(new HTTPErrorResponse(`The post with the id '${req.params.id}' doesn't exists`, 404));
     }
     return err ? res.send(new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(post);
-  }).populate("author", "-password -__v").populate("likes").populate("comments");
+  }).populate("author", "-password -__v").populate("comments");
 };
 
 exports.add = function(req, res) {
@@ -33,7 +33,7 @@ exports.add = function(req, res) {
     image: req.body.image
   });
   post.save((err, response) => {
-    return err ? res.send(new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(response);
+    return err ? res.send(new HTTPErrorResponse(err.message, 500)) : res.status(201).jsonp(response);
   });
 };
 
