@@ -34,15 +34,19 @@ var commentSchema = new Schema({
 
 commentSchema.pre('remove', function(next) {
   if (this.parent) {
-    this.model('Comment').remove({
-      replies: {
-        "$nin": [this._id]
+    this.model("Post").update({
+      _id: this.post._id
+    }, {
+      $pull: {
+        comments: this._id
       }
     }, next);
   } else {
-    this.model('Post').remove({
-      comments: {
-        "$nin": [this._id]
+    this.model("Comment").update({
+      _id: this.post._id
+    }, {
+      $pull: {
+        replies: this._id
       }
     }, next);
   }

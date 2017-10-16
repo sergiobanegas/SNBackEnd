@@ -18,6 +18,8 @@ app.set('port', 3000);
 require('./app/models/user');
 require('./app/models/post');
 require('./app/models/comment');
+require('./app/models/conversation');
+require('./app/models/message');
 
 var authRoutes = require("./app/routes/auth");
 var router = require("./app/router");
