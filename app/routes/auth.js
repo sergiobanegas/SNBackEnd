@@ -21,5 +21,4 @@ var upload = multer({ storage: storage })
 router.post('/signup', upload.single('avatar'), authCtrl.emailSignup);
 router.post('/login', authCtrl.emailLogin);
 
-
 module.exports = router;

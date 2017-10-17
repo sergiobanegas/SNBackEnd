@@ -3,6 +3,7 @@ var router = express.Router();
 var ConversationCtrl = require('../controllers/conversation');
 
 router.route('/')
+  .get(ConversationCtrl.findUserConversations)
   .post(ConversationCtrl.add);
 
 router.route('/:id')

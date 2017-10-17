@@ -7,7 +7,7 @@ var TokenResponse = require('./wrappers/auth/TokenResponse');
 var authService = require('../services/auth');
 
 exports.emailSignup = function(req, res) {
-  if (!req.body.name || !req.body.email || !req.body.genre || !req.body.password) {
+  if (!req.body.name || !req.body.email || !req.body.genre || !req.body.password || (req.body.genre != "male" && req.body.genre != "female")) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
   User.findOne({
@@ -18,7 +18,7 @@ exports.emailSignup = function(req, res) {
     }
     var avatar = config.DEFAULT_AVATAR_IMAGE;
     if (req.file) {
-      avatar = (req.file.path.replace(/\\/g,"/")).replace("public", "")
+      avatar = (req.file.path.replace(/\\/g, "/")).replace("public", "")
     }
     var user = new User({
       name: req.body.name,
@@ -43,7 +43,7 @@ exports.emailLogin = function(req, res) {
       return res.status(400).send(new HTTP400ErrorResponse());
     }
     if (!user) {
-      return res.status(404).send(new HTTPErrorResponse("The user doesn't exists", 404));
+      return res.status(404).send(new HTTPErrorResponse("The user doesn't exist", 404));
     } else {
       user.comparePassword(req.body.password, (err, response) => {
         return err ?

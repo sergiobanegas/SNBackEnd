@@ -11,7 +11,16 @@ exports.findById = function(req, res) {
       return res.status(404).send(new HTTPErrorResponse(`The comment with the id ${req.params.id} doesn't exists`, 400));
     }
     return err ? res.send(new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(comment);
-  }).populate("author", "-password -__v").populate("likes").populate("replies");
+  }).select("-__v").populate("author", "_id name avatar").populate("likes").populate({
+    path: 'replies',
+    model: 'Comment',
+    select: "-__v",
+    populate: {
+      path: 'author',
+      model: 'User',
+      select: "name avatar _id"
+    }
+  });
 };
 
 exports.add = function(req, res) {
@@ -31,7 +40,7 @@ exports.delete = function(req, res) {
       return res.status(404).send(new HTTPErrorResponse("The comment doesn't exists", 404));
     }
     comment.remove(error => {
-      return error ? res.send(new HTTPErrorResponse(error.message, 500)) : res.status(204).send(new HTTPSuccessResponse("Comment removed", 204));
+      return error ? res.send(new HTTPErrorResponse(error.message, 500)) : res.status(200).send(new HTTPSuccessResponse("Comment removed", 200));
     });
   });
 };
@@ -44,7 +53,7 @@ exports.like = function(req, res) {
     }
     comment.likes.indexOf(req.user.id) === -1 ? comment.likes.push(req.user.id) : comment.likes.pull(req.user.id);
     comment.save(error => {
-      return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).send(new HTTPSuccessResponse("Comment liked", 201));
+      return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).send(comment.likes);
     });
   });
 };
@@ -69,7 +78,16 @@ addCommentToPost = function(req, res) {
       }
       post.comments.push(comment);
       post.save(error => {
-        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(comment);
+        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp({
+          updatedAt: comment.updatedAt,
+          createdAt: comment.createdAt,
+          author: comment.author,
+          content: comment.content,
+          post: comment.post,
+          _id: comment._id,
+          likes: comment.likes,
+          replies: comment.replies
+        });
       });
     });
   });
@@ -93,7 +111,16 @@ addCommentToComment = function(req, res) {
       }
       postComment.replies.push(newComment);
       postComment.save(error => {
-        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp(newComment);
+        return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp({
+          updatedAt: newComment.updatedAt,
+          createdAt: newComment.createdAt,
+          author: newComment.author,
+          content: newComment.content,
+          post: newComment.post,
+          _id: newComment._id,
+          likes: newComment.likes,
+          replies: newComment.replies
+        });
       });
     });
   });

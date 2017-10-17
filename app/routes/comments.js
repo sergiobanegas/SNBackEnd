@@ -9,4 +9,7 @@ router.route('/:id')
   .get(CommentCtrl.findById)
   .delete(CommentCtrl.delete);
 
+router.route('/:id/like')
+  .post(CommentCtrl.like);
+
 module.exports = router;

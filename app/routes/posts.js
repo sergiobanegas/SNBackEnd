@@ -6,6 +6,9 @@ router.route('/')
   .get(PostCtrl.findAll)
   .post(PostCtrl.add);
 
+router.route('/own')
+  .get(PostCtrl.findUserPosts);
+
 router.route('/:id')
   .get(PostCtrl.findById)
   .put(PostCtrl.update)
