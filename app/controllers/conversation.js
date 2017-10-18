@@ -45,13 +45,21 @@ exports.findById = function(req, res) {
 };
 
 exports.add = function(req, res) {
-  if (!req.body.content || !req.body.members || req.body.members.length < 1) {
+  if (!req.body.content || !req.body.members || req.body.members.length < 1 || req.body.members.indexOf(req.user.id) > -1) {
     return res.status(400).send(new HTTP400ErrorResponse());
+  }
+  for (let user of req.body.members) {
+    User.findById(user, (err, response) => {
+      if (!response) {
+        return res.status(404).send(new HTTPErrorResponse(`The user with the id '${user}' doesn't exist`, 404));
+      }
+    });
   }
   let members = req.body.members;
   members.push(req.user.id);
   Conversation.find({
-    $and: [{
+    $and: [
+      {
         members: {
           $all: members
         }
@@ -66,34 +74,36 @@ exports.add = function(req, res) {
     if (conversations.length > 0) {
       return res.status(401).send(new HTTPErrorResponse(`You already have a conversation with that user`));
     }
-    for (let user of req.body.members) {
-      User.findById(user, (err, response) => {
-        if (!response) {
-          return res.status(404).send(new HTTPErrorResponse(`The user with the id '${user}' doesn't exist`, 404));
-        }
-      });
-    }
-    var message = new Message({
-      author: req.user.id,
-      content: req.body.content
+    var conversation = new Conversation({
+      members: members
     });
-    message.save((err, response) => {
-      if (err) return res.send(new HTTPErrorResponse(err.message, 500));
-      var conversation = new Conversation({
-        members: members
-      });
-      conversation.messages.push(message);
-      conversation.save((err, response) => {
+    conversation.save((err, response) => {
+      if (err) {
+        return res.send(new HTTPErrorResponse(err.message, 500));
+      }
+      Conversation.findById(conversation._id, (error, conversationCreated) => {
         if (err) {
           return res.send(new HTTPErrorResponse(err.message, 500));
         }
-        Conversation.findById(conversation._id, (error, response) => {
-          if (err) {
-            return res.send(new HTTPErrorResponse(err.message, 500));
-          }
-          return res.status(201).jsonp(response);
-        }).select("-__v");
-      });
+        var message = new Message({
+          author: req.user.id,
+          content: req.body.content,
+          conversation: conversationCreated._id
+        });
+        message.save((err, response) => {
+          if (err) return res.send(new HTTPErrorResponse(err.message, 500));
+          conversationCreated.messages.push(message);
+          conversationCreated.update({
+            $push: {
+              messages: response._id
+            }
+          }).then(response => {
+            return response.ok != 1 ?
+              res.status(500).send(new HTTPErrorResponse("Error deleting the user", 500)) :
+              res.status(201).jsonp(conversationCreated);
+          });
+        });
+      }).select("-__v");
     });
   });
 };
@@ -127,7 +137,8 @@ exports.addMessage = function(req, res) {
     }
     var message = new Message({
       author: req.user.id,
-      content: req.body.content
+      content: req.body.content,
+      conversation: req.params.id
     });
     message.save((err, messageCreated) => {
       if (err) return res.send(new HTTPErrorResponse(err.message, 500));

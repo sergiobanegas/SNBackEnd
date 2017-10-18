@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "find ./test -name 'test.js' | xargs mocha -R spec"
+    "test": "find ./test -name 'test.js' | xargs mocha -S -R spec"
   },
   "author": "Sergio Banegas Cortijo",
   "license": "ISC",

@@ -9,10 +9,10 @@ var userSchema = new Schema({
   },
   email: {
     type: String,
-    unique : true,
+    unique: true,
     required: true
   },
-  genre: {
+  gender: {
     type: String,
     enum: ['male', 'female'],
     required: true
@@ -25,9 +25,18 @@ var userSchema = new Schema({
     type: String,
     required: true
   },
-  friends: [{ type: Schema.Types.ObjectId, ref: 'User'}],
-  friend_requests_sent: [{ type: Schema.Types.ObjectId, ref: 'User'}],
-  friend_requests_received: [{ type: Schema.Types.ObjectId, ref: 'User'}]
+  friends: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  friend_requests_sent: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  friend_requests_received: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, {
   timestamps: true
 });
@@ -55,5 +64,42 @@ userSchema.methods.comparePassword = function(password, done) {
     done(null, isMatch);
   });
 };
+
+userSchema.methods.deleteUser = function(done) {
+  this.constructor.update({
+    friends: {
+      $in: [this._id]
+    }
+  }, {
+    $pull: {
+      friends: this._id
+    }
+  }).then(response => {
+    if (response.ok != 1) done(false);
+    this.constructor.update({
+      friend_requests_sent: {
+        $in: [this._id]
+      }
+    }, {
+      $pull: {
+        friend_requests_sent: this._id
+      }
+    }).then(response => {
+      if (response.ok != 1) done(false);
+      this.constructor.update({
+        friend_requests_received: {
+          $in: [this._id]
+        }
+      }, {
+        $pull: {
+          friend_requests_received: this._id
+        }
+      }).then(response => {
+        done(response.ok == 1);
+      });
+    });
+  });
+}
+
 
 module.exports = mongoose.model('User', userSchema);

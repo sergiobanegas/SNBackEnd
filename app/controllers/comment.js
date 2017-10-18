@@ -6,11 +6,14 @@ var HTTPSuccessResponse = require('./wrappers/http/HTTPSuccessResponse');
 var HTTP400ErrorResponse = require('./wrappers/http/HTTP400ErrorResponse');
 
 exports.findById = function(req, res) {
-  Comment.findById(req.params.id, (err, comment) => {
+  Comment.find({
+    _id: req.params.id
+  }, (err, comment) => {
     if (!comment) {
       return res.status(404).send(new HTTPErrorResponse(`The comment with the id ${req.params.id} doesn't exists`, 400));
     }
-    return err ? res.send(new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(comment);
+    if (err) return res.send(new HTTPErrorResponse(err.message, 500));
+    return res.status(200).jsonp(comment);
   }).select("-__v").populate("author", "_id name avatar").populate("likes").populate({
     path: 'replies',
     model: 'Comment',

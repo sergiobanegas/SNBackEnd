@@ -23,7 +23,7 @@ exports.update = function(req, res) {
   User.findById(req.params.id, (err, user) => {
     user.name = req.body.name;
     user.email = req.body.email;
-    user.genre = req.body.genre;
+    user.gender = req.body.gender;
     user.save(error => {
       return error ? res.status(500).send(new HTTPErrorResponse(err.message, 500)) : res.status(200).jsonp(user);
     });

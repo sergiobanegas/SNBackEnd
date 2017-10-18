@@ -8,8 +8,10 @@ var friendRoutes = require("./routes/friends");
 var postRoutes = require("./routes/posts");
 var commentRoutes = require("./routes/comments");
 var conversationRoutes = require("./routes/conversations");
+var accountRoutes = require("./routes/account");
 
 router.use(middleware.ensureAuthenticated);
+router.use('/account', accountRoutes);
 router.use('/users', userRoutes);
 router.use('/friends', friendRoutes);
 router.use('/posts', postRoutes);

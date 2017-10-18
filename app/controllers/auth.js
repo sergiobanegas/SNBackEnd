@@ -7,25 +7,22 @@ var TokenResponse = require('./wrappers/auth/TokenResponse');
 var authService = require('../services/auth');
 
 exports.emailSignup = function(req, res) {
-  if (!req.body.name || !req.body.email || !req.body.genre || !req.body.password || (req.body.genre != "male" && req.body.genre != "female")) {
+  if (!req.body.name || !req.body.email || !req.body.gender || !req.body.password || (req.body.gender != "male" && req.body.gender != "female")) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
   User.findOne({
-    email: req.body.email
+    email: req.body.email,
+    deleted: false
   }, (err, user) => {
     if (user) {
       return res.status(400).send(new HTTPErrorResponse("The email provided already exists", 400));
     }
-    var avatar = config.DEFAULT_AVATAR_IMAGE;
-    if (req.file) {
-      avatar = (req.file.path.replace(/\\/g, "/")).replace("public", "")
-    }
     var user = new User({
       name: req.body.name,
       email: req.body.email,
-      genre: req.body.genre,
+      gender: req.body.gender,
       password: req.body.password,
-      avatar: avatar
+      avatar: config.DEFAULT_AVATAR_IMAGE
     });
     user.save((err, user) => {
       return err ?
@@ -37,7 +34,8 @@ exports.emailSignup = function(req, res) {
 
 exports.emailLogin = function(req, res) {
   User.findOne({
-    email: req.body.email.toLowerCase()
+    email: req.body.email.toLowerCase(),
+    deleted: false
   }, (err, user) => {
     if (!req.body.email || !req.body.password) {
       return res.status(400).send(new HTTP400ErrorResponse());

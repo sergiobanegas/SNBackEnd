@@ -10,10 +10,10 @@ describe("/auth", function() {
     server
       .post("/auth/signup")
       .send({
-        email: "testing@test.com",
+        email: "auth-test@test.com",
         password: "1234",
         name: "Test",
-        genre: "male"
+        gender: "male"
       })
       .expect("Content-type", /json/)
       .expect(200)
@@ -28,7 +28,7 @@ describe("/auth", function() {
     server
       .post("/auth/login")
       .send({
-        email: "testing@test.com",
+        email: "auth-test@test.com",
         password: "1234"
       })
       .expect("Content-type", /json/)

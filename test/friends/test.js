@@ -15,7 +15,7 @@ describe("/api/friends", function() {
     server
       .post("/auth/signup")
       .send({
-        email: "test@test.com",
+        email: "test-friends@test.com",
         password: "1234",
         name: "Test1",
         genre: "male"
@@ -27,7 +27,7 @@ describe("/api/friends", function() {
         server
           .post("/auth/signup")
           .send({
-            email: "test2@test.com",
+            email: "test-friends2@test.com",
             password: "1234",
             name: "test2",
             genre: "female"

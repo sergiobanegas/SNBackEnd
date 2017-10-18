@@ -103,7 +103,7 @@ exports.delete = function(req, res) {
       return res.status(404).send(new HTTPErrorResponse("The post doesn't exists", 404));
     }
     post.remove(error => {
-      return error ? res.send(new HTTPErrorResponse(error.message, 500)) : res.status(204).send(new HTTPSuccessResponse("Post deleted", 204));
+      return error ? res.send(new HTTPErrorResponse(error.message, 500)) : res.status(200).send(new HTTPSuccessResponse("Post deleted", 200));
     });
   });
 };
