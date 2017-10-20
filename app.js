@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(methodOverride());
 app.use(cors());
-app.set('port', 3000);
+app.set('port', config.PORT);
 
 require('./app/models/user');
 require('./app/models/post');

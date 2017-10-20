@@ -11,8 +11,7 @@ exports.emailSignup = function(req, res) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
   User.findOne({
-    email: req.body.email,
-    deleted: false
+    email: req.body.email
   }, (err, user) => {
     if (user) {
       return res.status(400).send(new HTTPErrorResponse("The email provided already exists", 400));
@@ -34,8 +33,7 @@ exports.emailSignup = function(req, res) {
 
 exports.emailLogin = function(req, res) {
   User.findOne({
-    email: req.body.email.toLowerCase(),
-    deleted: false
+    email: req.body.email.toLowerCase()
   }, (err, user) => {
     if (!req.body.email || !req.body.password) {
       return res.status(400).send(new HTTP400ErrorResponse());
