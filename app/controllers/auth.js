@@ -42,9 +42,10 @@ exports.emailLogin = function(req, res) {
       return res.status(404).send(new HTTPErrorResponse("The user doesn't exist", 404));
     } else {
       user.comparePassword(req.body.password, (err, response) => {
-        return err ?
-          res.status(404).send(new HTTPErrorResponse(err.message, 404)) :
-          res.status(200).send(new TokenResponse(authService.createToken(user)));
+        if (err) return res.status(500).send(new HTTPErrorResponse(err.message, 500))
+        return response ?
+          res.status(200).send(new TokenResponse(authService.createToken(user))) :
+          res.status(404).send(new HTTPErrorResponse("The user or password is incorrect", 404))
       });
     }
   });
