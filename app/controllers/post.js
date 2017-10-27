@@ -37,7 +37,7 @@ exports.findById = function(req, res) {
   }).select("-__v").populate("author", "_id name avatar").populate({
     path: "comments",
     model: "Comment",
-    select: "_id updatedAt createdAt content author likes replies",
+    select: "_id updatedAt createdAt content author likes replies post",
     populate: {
       path: "author",
       model: "User",

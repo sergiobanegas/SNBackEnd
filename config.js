@@ -1,8 +1,8 @@
 const PUBLIC_PATH = "/public";
-const DEFAULT_PATH = PUBLIC_PATH+"/default";
-const UPLOADS_PATH = PUBLIC_PATH + "/uploads";
+const DEFAULT_PATH = PUBLIC_PATH+"/files/default";
+const UPLOADS_PATH = PUBLIC_PATH + "/files/uploads";
 const AVATARS_PATH = UPLOADS_PATH + "/avatars";
-const DEFAULT_AVATAR_IMAGE = "/default/users/default_avatar.png";
+const DEFAULT_AVATAR_IMAGE = "/files/default/users/default_avatar.png";
 
 module.exports = {
   TOKEN_SECRET: process.env.TOKEN_SECRET || "secret-token",

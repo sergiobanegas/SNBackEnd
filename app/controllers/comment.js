@@ -6,7 +6,7 @@ var HTTPSuccessResponse = require('./wrappers/http/HTTPSuccessResponse');
 var HTTP400ErrorResponse = require('./wrappers/http/HTTP400ErrorResponse');
 
 exports.findById = function(req, res) {
-  Comment.find({
+  Comment.findOne({
     _id: req.params.id
   }, (err, comment) => {
     if (!comment) {
