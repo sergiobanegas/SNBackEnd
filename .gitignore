@@ -19,4 +19,4 @@ coverage
 benchmarks/graphs
 
 public/*
-!public/default/
+!public/default/*
