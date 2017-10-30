@@ -8,7 +8,7 @@ describe("/auth", function() {
 
   it("should sign up correctly", function(done) {
     server
-      .post("/auth/signup")
+      .post("/auth/sign-up")
       .send({
         email: "auth-test@test.com",
         password: "1234",
@@ -26,7 +26,7 @@ describe("/auth", function() {
 
   it("should login correctly", function(done) {
     server
-      .post("/auth/login")
+      .post("/auth/sign-in")
       .send({
         email: "auth-test@test.com",
         password: "1234"

@@ -4,7 +4,7 @@ var api = express.Router();
 var authCtrl = require('../controllers/auth');
 var router = express.Router();
 
-router.post('/signup', authCtrl.emailSignup);
-router.post('/login', authCtrl.emailLogin);
+router.post('/sign-up', authCtrl.emailSignUp);
+router.post('/sign-in', authCtrl.emailSignIn);
 
 module.exports = router;

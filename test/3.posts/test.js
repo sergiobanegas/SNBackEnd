@@ -13,7 +13,7 @@ describe("/api/posts", function() {
 
   before(function(done) {
     server
-      .post("/auth/signup")
+      .post("/auth/sign-up")
       .send({
         email: "test-posts@test.com",
         password: "1234",

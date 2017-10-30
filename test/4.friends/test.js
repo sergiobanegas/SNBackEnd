@@ -13,7 +13,7 @@ describe("/api/friends", function() {
 
   before(function(done) {
     server
-      .post("/auth/signup")
+      .post("/auth/sign-up")
       .send({
         email: "test-friends@test.com",
         password: "1234",
@@ -25,7 +25,7 @@ describe("/api/friends", function() {
         let payload = jwt.verify(token1, config.TOKEN_SECRET);
         userId1 = payload.user.id;
         server
-          .post("/auth/signup")
+          .post("/auth/sign-up")
           .send({
             email: "test-friends2@test.com",
             password: "1234",

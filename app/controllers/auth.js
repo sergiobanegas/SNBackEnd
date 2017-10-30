@@ -6,7 +6,7 @@ var HTTP400ErrorResponse = require('./wrappers/http/HTTP400ErrorResponse');
 var TokenResponse = require('./wrappers/auth/TokenResponse');
 var authService = require('../services/auth');
 
-exports.emailSignup = function(req, res) {
+exports.emailSignUp = function(req, res) {
   if (!req.body.name || !req.body.email || !req.body.gender || !req.body.password || (req.body.gender != "male" && req.body.gender != "female")) {
     return res.status(400).send(new HTTP400ErrorResponse());
   }
@@ -31,7 +31,7 @@ exports.emailSignup = function(req, res) {
   });
 };
 
-exports.emailLogin = function(req, res) {
+exports.emailSignIn = function(req, res) {
   User.findOne({
     email: req.body.email.toLowerCase()
   }, (err, user) => {
