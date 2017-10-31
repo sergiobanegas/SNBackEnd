@@ -117,7 +117,7 @@ addCommentToComment = function(req, res) {
         return error ? res.status(500).send(new HTTPErrorResponse(error.message, 500)) : res.status(200).jsonp({
           updatedAt: newComment.updatedAt,
           createdAt: newComment.createdAt,
-          author: newComment.author,
+          author: postComment.author,
           content: newComment.content,
           post: newComment.post,
           _id: newComment._id,
@@ -126,5 +126,5 @@ addCommentToComment = function(req, res) {
         });
       });
     });
-  });
+  }).populate("author", "_id name avatar");
 }
